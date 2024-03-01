@@ -6,7 +6,7 @@ import os
 class tab_maker():
     
     #画像保存先を受け取り起動。画像リストを生成
-    def  __init__(self,input_dir="",output_dir="",vseparate=6,vspacing=5,hspacing=0):
+    def  __init__(self,input_dir="",output_dir="",vseparate=6,vspacing=5):
         
         #出力ディレクトリの設定
         self.output_dir = output_dir
@@ -27,9 +27,6 @@ class tab_maker():
         
         #出力時の画像の間の縦スペースの設定
         self.vspacing = vspacing
-        
-        #出力時の画像の横スペースの設定
-        self.hspacing = hspacing
         
         #トリミング位置
         self.crop_pos_leftup = []
@@ -74,10 +71,9 @@ class tab_maker():
                     print("異なるサイズの画像があったため除外しました")
     
     #余白や、つなげる枚数の設定を更新
-    def set_outputvariables(self,vseparate,vspacing,hspacing):
+    def set_outputvariables(self,vseparate,vspacing):
         self.vseparate = vseparate
         self.vspacing = vspacing
-        self.hspacing = hspacing
                     
     #画像を指定の二点をもとに切り取る
     def crop_img(self,img,left_up,right_down):
@@ -172,8 +168,7 @@ class tab_maker():
     #画像の結合を行う
     #vseparate:何枚づつで縦結合するか
     #vspacing:縦方向の余白
-    #hspacing:横方向の余白
-    def concat(self,vseparate=6,vspacing=5,hspacing=0):
+    def concat(self,vseparate=6,vspacing=5):
         img_list_copy = self.img_list.copy()
 
         #足りない枚数
@@ -187,7 +182,7 @@ class tab_maker():
         #余白の追加
         if vspacing > 0:
             for i,img in enumerate(img_list_copy):
-                img_list_copy[i]=cv2.copyMakeBorder(img, vspacing, vspacing, hspacing, hspacing,cv2.BORDER_CONSTANT,value=[255,255,255])
+                img_list_copy[i]=cv2.copyMakeBorder(img, vspacing, vspacing, 0, 0,cv2.BORDER_CONSTANT,value=[255,255,255])
         
         #画像の結合と保存
         number = 1
@@ -257,8 +252,7 @@ class tab_maker():
             
             #画像の結合
             self.concat(vseparate = self.vseparate,
-                        vspacing = self.vspacing,
-                        hspacing = self.hspacing)
+                        vspacing = self.vspacing)
             
             return True
         

@@ -15,73 +15,100 @@ except:
 
 class Application():
     def __init__(self):
-        #TabMakerが動作中かどうか。Trueの場合、アプリを閉じられない
-        self.is_processing = False
-        
         #tabmakerクラスのインスタンス化
         self.tm = tab_maker()
         
         # rootの作成
-        self.root = Tk()
-        self.root.geometry("600x300")
-        self.root.title("TabMaker")
+        root = Tk()
+        root.geometry("600x300")
+        root.title("TabMaker")
         
         # 入力フォルダ用のフレームの作成
-        self.input_folder_frame = ttk.Frame(self.root, padding=10)
-        self.input_folder_frame.grid(row=0, column=0,columnspan=2,sticky=E)
+        input_folder_frame = ttk.Frame(root, padding=10)
+        input_folder_frame.grid(row=0, column=0,columnspan=2,sticky=E)
 
         # 入力フォルダ用ラベルの作成
-        self.IDirLabel = ttk.Label(self.input_folder_frame, text="元画像フォルダ参照＞＞", padding=(5, 2))
-        self.IDirLabel.pack(side=LEFT)
+        IDirLabel = ttk.Label(input_folder_frame, text="元画像フォルダ参照＞＞", padding=(5, 2))
+        IDirLabel.pack(side=LEFT)
         
         # 入力フォルダ用エントリーの作成
         self.input_folder_entry = StringVar(value="未選択")
-        self.IDirEntry = ttk.Entry(self.input_folder_frame, textvariable=self.input_folder_entry, width=30)
-        self.IDirEntry.pack(side=LEFT)
+        IDirEntry = ttk.Entry(input_folder_frame, textvariable=self.input_folder_entry, width=30)
+        IDirEntry.pack(side=LEFT)
 
         # 入力フォルダ用ボタンの作成
-        self.IDirButton = ttk.Button(self.input_folder_frame, text="参照", command=self.Idirdialog_clicked)
-        self.IDirButton.pack(side=LEFT)
+        IDirButton = ttk.Button(input_folder_frame, text="参照", command=self.Idirdialog_clicked)
+        IDirButton.pack(side=LEFT)
         
         # 出力フォルダ用のフレームの作成
-        self.output_folder_frame = ttk.Frame(self.root, padding=10)
-        self.output_folder_frame.grid(row=1, column=0,columnspan=2,sticky=E)
+        output_folder_frame = ttk.Frame(root, padding=10)
+        output_folder_frame.grid(row=1, column=0,columnspan=2,sticky=E)
 
         # 出力フォルダ用ラベルの作成
-        self.ODirLabel = ttk.Label(self.output_folder_frame, text="出力フォルダ参照＞＞", padding=(5, 2))
-        self.ODirLabel.pack(side=LEFT)
+        ODirLabel = ttk.Label(output_folder_frame, text="出力フォルダ参照＞＞", padding=(5, 2))
+        ODirLabel.pack(side=LEFT)
 
         #出力フォルダ用エントリーの作成
         self.output_folder_entry = StringVar(value="未選択")
-        self.ODirEntry = ttk.Entry(self.output_folder_frame, textvariable=self.output_folder_entry, width=30)
-        self.ODirEntry.pack(side=LEFT)
+        ODirEntry = ttk.Entry(output_folder_frame, textvariable=self.output_folder_entry, width=30)
+        ODirEntry.pack(side=LEFT)
 
         # 出力フォルダ用ボタンの作成
-        self.ODirButton = ttk.Button(self.output_folder_frame, text="参照", command=self.Odirdialog_clicked)
-        self.ODirButton.pack(side=LEFT)
+        ODirButton = ttk.Button(output_folder_frame, text="参照", command=self.Odirdialog_clicked)
+        ODirButton.pack(side=LEFT)
         
         #インプットディレクトリ用フレームの作成
-        self.finded_imgnum_frame = ttk.Frame(self.root,padding=10)
-        self.finded_imgnum_frame.grid(row=2,column=0,sticky=E)
+        finded_imgnum_frame = ttk.Frame(root,padding=10)
+        finded_imgnum_frame.grid(row=2,column=0,sticky=E)
         
         #見つかったファイル数を示すテキストの配置
-        self.finded_imgnum_label =  ttk.Label(self.finded_imgnum_frame,text="画像　：　0枚")
+        self.finded_imgnum_label =  ttk.Label(finded_imgnum_frame,text="画像　：　0枚")
         self.finded_imgnum_label.pack(side=LEFT)
         
         #画像結合時の設定を行うフレーム
-        self.output_img_setting_frame = ttk.Frame(self.root,padding = 10)
-        self.output_img_setting_frame.grid(row=3,column=0,sticky=E)
-        
+        output_img_setting_frame = ttk.Frame(root,padding = 10)
+        output_img_setting_frame.grid(row=3,column=0,rowspan=2,columnspan=2,sticky=E)
+
+        #vsepareteの説明
+        vseparate_label = ttk.Label(output_img_setting_frame,
+                                         text="画像一枚あたりの行数：")
+        vseparate_label.pack(side=LEFT)
+
+        #vseparate選択コンボボックス
+        self.vseparate = IntVar(value=7)
+        vseparate_value_list=[1,2,3,4,5,6,7,8,9,10]
+        vseparate_combobox = ttk.Combobox(output_img_setting_frame,
+                                               width=5,
+                                               value=vseparate_value_list,
+                                               textvariable=self.vseparate,
+                                               state="readonly")
+        vseparate_combobox.pack(side=LEFT)
+
+        #vspacingの説明
+        vspacing_label = ttk.Label(output_img_setting_frame,
+                                   text="画像間の余白：")
+        vspacing_label.pack(side=LEFT)
+
+        #vspacing選択コンボボックス
+        self.vspacing = IntVar(value=5)
+        vspacing_value_list = [5,10,15,20,25,30]
+        vspacing_combobox = ttk.Combobox(output_img_setting_frame,
+                                         width=5,
+                                         value=vspacing_value_list,
+                                         textvariable=self.vspacing,
+                                         state="readonly")
+        vspacing_combobox.pack(side=LEFT)
+
         #実行ボタンフレームの作成
-        self.exebutton_frame = ttk.Frame(self.root, padding=10)
-        self.exebutton_frame.grid(row=4,column=1,sticky=W)
+        exebutton_frame = ttk.Frame(root, padding=10)
+        exebutton_frame.grid(row=5,column=1,sticky=W)
 
         # 実行ボタンの設置
-        self.exebutton= ttk.Button(self.exebutton_frame, text="開始", command=self.conductMain)
-        self.exebutton.pack(fill = "x", padx=30, side = "left")  
+        exebutton= ttk.Button(exebutton_frame, text="開始", command=self.conductMain)
+        exebutton.pack(fill = "x", padx=30, side = TOP)  
     
-        #実行
-        self.root.mainloop()
+        #アプリケーションの開始
+        root.mainloop()
     
     #入力フォルダ指定の関数
     def Idirdialog_clicked(self):
@@ -136,7 +163,7 @@ class Application():
                                  "指定フォルダに画像がありません")
 
         #実行
-        self.is_processing = True
+        self.tm.set_outputvariables(vseparate=self.vseparate.get(),vspacing=self.vspacing.get())
         result = self.tm.main()
         
         if result == True:
@@ -145,8 +172,6 @@ class Application():
         else:
             messagebox.showerror("失敗",
                                  "実行失敗")
-            
-        self.is_processing = False
     
 if __name__ == "__main__":
     App = Application()
